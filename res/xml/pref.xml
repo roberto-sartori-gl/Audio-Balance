@@ -1,0 +1,17 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+		<EditTextPreference
+        android:key="left"
+        android:inputType="numberDecimal" 
+        android:defaultValue="0"
+        android:ems="10"
+        android:title="Left gain (%)" />
+        
+        <EditTextPreference
+        android:key="right"
+        android:inputType="numberDecimal" 
+        android:defaultValue="0"
+        android:ems="10"
+        android:title="Right gain (%)" />
+       
+</PreferenceScreen>
