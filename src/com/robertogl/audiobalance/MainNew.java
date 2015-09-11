@@ -13,7 +13,8 @@ public class MainNew implements IXposedHookLoadPackage{
 	
 	public float do_math_left(float volume_left, float volume_right){
 			if (volume_right > volume_left){
-				return (float)(1 - Math.log(-volume_left + volume_right)/Math.log(MAX_VOLUME)); //for logarithmic function
+				//return (float)(1 - Math.log(-volume_left + volume_right)/Math.log(MAX_VOLUME)); //for logarithmic function
+				return (float)(1 - ((volume_right - volume_left) / MAX_VOLUME));
 			}
 			if (volume_right < volume_left){
 				return (float)(1);
@@ -26,7 +27,8 @@ public class MainNew implements IXposedHookLoadPackage{
 				return (float)(1);
 			}
 			if (volume_right < volume_left){
-				return (float)(1 - Math.log(+ volume_left - volume_right)/Math.log(MAX_VOLUME));
+				return (float)(1 - ((- volume_right + volume_left) / MAX_VOLUME));
+				//return (float)(1 - Math.log(+ volume_left - volume_right)/Math.log(MAX_VOLUME));
 			}
 			else return (float)(1);
 	}
@@ -77,6 +79,27 @@ public class MainNew implements IXposedHookLoadPackage{
 	            }
 	            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 	            }
+	        });
+			
+			
+			
+			findAndHookMethod(AudioTrack.class, "setStereoVolume", float.class, float.class, new XC_MethodHook() { 
+	            @Override
+	            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+	            	if (Preferences.right()>Preferences.left()){
+	            	param.args[0]=  1 - ((Preferences.right() - Preferences.left()) / MAX_VOLUME);
+	                param.args[1]= 1;
+	            	}
+	            	if (Preferences.right()<Preferences.left()){
+	            		param.args[1]=  1 - ((- Preferences.right() + Preferences.left()) / MAX_VOLUME);
+		                param.args[0]= 1;
+	            	}
+	            	else {
+	            		param.args[1]=  1;
+		                param.args[0]= 1;
+	            	}
+	            }
+	            
 	        });
 			
 		}
